@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-11-15T19:03:57.388Z",
+  "source": "Custom live Playwright Chromium audit (not MASTER V6 visual_qa.py)",
+  "source_revision": "68a72a042d1b1eb0ddd33d6103e4f7ed86c739a6",
+  "deployment_id": "dpl_AghZVv4qyYMe6eorvM28fZZQXi77",
+  "deployment_url": "https://openpets-ru-v6.vercel.app/",
+  "vercel_state": "READY",
+  "http_status": 200,
+  "security_headers": {
+    "X-Robots-Tag": "noindex, nofollow, noarchive",
+    "X-Content-Type-Options": "nosniff"
+  },
+  "browser": "Playwright 1.65.1 / Chromium 159 (Vercel sandbox, Linux)",
+  "viewports": [
+    {
+      "width": 360,
+      "height": 844,
+      "scrollWidth": 360,
+      "primaryCtaBottom": 515,
+      "jsErrors": [],
+      "horizontalOverflow": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "primaryCtaBottom": 474,
+      "jsErrors": [],
+      "horizontalOverflow": false,
+      "chatPromptPrefilled": true,
+      "chatDisclosureRendered": true,
+      "specialtySelection": "Дерматолог",
+      "availabilityDisclosureRendered": true,
+      "menuOpenAndEscapeClose": true
+    },
+    {
+      "width": 768,
+      "height": 844,
+      "scrollWidth": 768,
+      "primaryCtaBottom": 577,
+      "jsErrors": [],
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "scrollWidth": 1440,
+      "primaryCtaBottom": 790,
+      "jsErrors": [],
+      "horizontalOverflow": false
+    }
+  ],
+  "evidence_details": "Full-page screenshots were generated in an ephemeral Vercel sandbox, but image artifacts were not retained in the repository. A reduced-size mobile first-screen screenshot was visually inspected. Full visual and independent critic review remain incomplete.",
+  "limitations": [
+    "Not MASTER V6 visual_qa.py",
+    "No independent critic",
+    "No full desktop screenshot visual inspection",
+    "No 200% zoom / assistive technology / slow network / real mobile device audit",
+    "No backend AI or clinic booking integration",
+    "Not production launch acceptance"
+  ],
+  "design_gate": "blocked"
+}
