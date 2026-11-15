@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "project_id": "openpets-ru-v6",
+  "name": "OpenPets.ru — route-of-care concept",
+  "mode": "redesign",
+  "stage": "qa",
+  "revision": "68a72a042d1b1eb0ddd33d6103e4f7ed86c739a6",
+  "updated_at": "2026-11-15T19:05:06.380Z",
+  "next_action": "Independent screenshot review, full design gate, and safe provider/AI integrations",
+  "blockers": [
+    "ai-web-studio 2.0 skill/scripts were not installed; design_gate.py not executed",
+    "Independent critic and two complete visual review cycles not completed",
+    "AI model, clinics, booking API and validated legal operator absent",
+    "Vercel GitHub Login Connection is not configured; automatic deployment disabled"
+  ],
+  "checks": [
+    {
+      "name": "browser-functional",
+      "status": "passed",
+      "reason": "Live Playwright Chromium 159 checks on 360/390/768/1440, critical interactions exercised",
+      "evidence": {
+        "path": "reports/browser-qa.json",
+        "method": "Playwright live browser",
+        "recorded_at": "2026-11-15T19:05:06.380Z",
+        "revision": "68a72a042d1b1eb0ddd33d6103e4f7ed86c739a6"
+      }
+    },
+    {
+      "name": "design",
+      "status": "blocked",
+      "reason": "No V6 design_gate.py zero exit code; independent critique missing",
+      "evidence": null
+    },
+    {
+      "name": "polish",
+      "status": "blocked",
+      "reason": "Only partial visual image inspected; two independent cycles missing",
+      "evidence": null
+    },
+    {
+      "name": "seo",
+      "status": "not_applicable",
+      "reason": "Unreleased nonofficial concept intentionally noindexed",
+      "evidence": null
+    },
+    {
+      "name": "backend-integration",
+      "status": "blocked",
+      "reason": "No AI provider or vetted clinic/availability services",
+      "evidence": null
+    }
+  ],
+  "artifacts": [
+    "design/DESIGN.md",
+    "reports/browser-qa.json",
+    "reports/design-review.md",
+    "reports/needs-from-client.md",
+    "research/sources.md"
+  ],
+  "deployment": {
+    "environment": "production",
+    "url": "https://openpets-ru-v6.vercel.app/",
+    "revision": "68a72a042d1b1eb0ddd33d6103e4f7ed86c739a6",
+    "status": "READY",
+    "verified_at": "2026-11-15T19:05:06.380Z",
+    "evidence": "Live Playwright HTTP 200 and Vercel get_deployment READY"
+  },
+  "authorization_evidence": null,
+  "acceptance_evidence": null
+}
