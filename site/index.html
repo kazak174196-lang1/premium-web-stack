@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#F6F5EF">
+<meta name="description" content="OpenPets — навигация по вопросам о здоровье питомца и выбор ветеринарного специалиста для очного приёма. Неофициальная демонстрация интерфейса.">
+<meta property="og:title" content="OpenPets — маршрут заботы о питомце">
+<meta property="og:description" content="ИИ-чат и выбор очного ветеринара по специальности. Демонстрация интерфейса, сервисы пока не подключены.">
+<title>OpenPets — от вопроса к ветеринару</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+<script src="app.js" defer></script>
+</head>
+<body id="top">
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><symbol id="route-mark" viewBox="0 0 88 28" fill="none"><path d="M6 14H23C29 14 29 3 35 3H53C59 3 59 25 65 25H82" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="6" cy="14" r="3.2" fill="currentColor"/><circle cx="44" cy="3" r="3.2" fill="currentColor"/><circle cx="82" cy="25" r="3.2" fill="currentColor"/></symbol><symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></svg>
+<a class="skip" href="#main">Перейти к содержимому</a>
+<div class="demo-bar"><span class="demo-pulse"></span><strong>Неофициальная демонстрация</strong><span>ИИ и запись к врачу пока не подключены · заявки не принимаются</span></div>
+<header class="header" id="header">
+<div class="shell header-inner">
+<a href="#top" class="wordmark" aria-label="OpenPets — главная"><svg class="mark" aria-hidden="true"><use href="#route-mark"></use></svg><span>openpets<span class="wordmark-point">.</span></span></a>
+<nav class="nav" id="main-nav" aria-label="Основная навигация">
+<a href="#assistant">ИИ-помощник</a><a href="#specialists">Выбрать врача</a><a href="#steps">Как это работает</a><a href="#answers">Вопросы</a>
+</nav>
+<a class="header-action" href="#specialists">Очный приём <span aria-hidden="true">↗</span></a>
+<button class="menu-toggle" id="menu-toggle" type="button" aria-label="Открыть меню" aria-controls="main-nav" aria-expanded="false"><span></span><span></span></button>
+</div></header>
+<main id="main">
+<section class="hero shell" aria-labelledby="hero-heading">
+<div class="hero-copy">
+<div class="eyebrow"><span class="rule"></span> 01 / ПОМОЩЬ НАЧИНАЕТСЯ С ВОПРОСА</div>
+<h1 id="hero-heading">У&nbsp;заботы<br>есть <em>маршрут.</em></h1>
+<p class="hero-lead">Опишите, что происходит с&nbsp;питомцем. Начните с&nbsp;вопроса в&nbsp;чате или выберите ветеринарного специалиста для очного осмотра.</p>
+<div class="hero-actions"><a href="#assistant" class="button-primary" data-cta="primary" id="focus-chat">Задать вопрос <svg aria-hidden="true"><use href="#arrow"></use></svg></a><a href="#specialists" class="text-link">Найти очного врача <span aria-hidden="true">↗</span></a></div>
+<div class="hero-caption"><span class="side-index">01 — 03</span><span>Вопрос. Специальность. Очный приём.<br>Без обещаний диагноза в переписке.</span></div>
+</div>
+<div class="hero-stage">
+<div class="hero-stage-top"><span>OPENPETS / ЦИФРОВОЙ НАВИГАТОР</span><span class="stage-coordinate">● 55°45′ N / WEB</span></div>
+<div class="assistant" id="assistant" aria-labelledby="assistant-heading">
+<div class="assistant-head"><div class="assistant-head-left"><span class="assistant-sigil" aria-hidden="true">op<span>+</span></span><div><strong id="assistant-heading">OpenPets AI</strong><small>Навигатор по вопросам о питомцах</small></div></div><span class="assist-status"><span></span> ДЕМО-РЕЖИМ</span></div>
+<div class="chat-scroll" id="chat-log" role="log" aria-label="Сообщения чата" aria-live="polite" aria-relevant="additions text">
+<div class="chat-intro"><span class="chat-intro-index">ВОПРОС / 01</span><h2>Что вас беспокоит?</h2><p>Напишите вид питомца, его возраст и&nbsp;что изменилось в&nbsp;самочувствии. В&nbsp;этом прототипе ответы ИИ ещё недоступны.</p></div>
+</div>
+<div class="suggestions" id="chat-suggestions"><button type="button" data-prompt="Собака перестала есть">Собака перестала есть <span>↗</span></button><button type="button" data-prompt="Как подготовиться к вакцинации?">Подготовка к вакцинации <span>↗</span></button><button type="button" data-prompt="Нужен ветеринарный дерматолог">Нужен дерматолог <span>↗</span></button></div>
+<form class="chat-form" id="chat-form"><label class="sr-only" for="chat-message">Вопрос о питомце</label><input id="chat-message" type="text" maxlength="1200" placeholder="Что случилось с питомцем?" autocomplete="off" aria-describedby="chat-disclaimer"><button type="submit" aria-label="Отправить вопрос"><svg aria-hidden="true"><use href="#arrow"></use></svg></button></form>
+<p class="chat-disclaimer" id="chat-disclaimer">ИИ не заменяет осмотр ветеринара. Не отправляйте в демонстрацию личные данные.</p>
+</div>
+<div class="stage-bottom"><svg class="mark" aria-hidden="true"><use href="#route-mark"></use></svg><span>01 / ВОПРОС</span><span>02 / СПЕЦИАЛЬНОСТЬ</span><span>03 / ПРИЁМ</span></div>
+</div>
+</section>
+<section class="manifesto" id="steps" aria-labelledby="route-heading"><div class="shell"><div class="section-meta"><span>КАРТА МАРШРУТА</span><span>01 — 03</span></div><div class="manifesto-heading"><h2 id="route-heading">Не угадывать.<br><em>Двигаться по шагам.</em></h2><p>Одна последовательность для ситуации, когда неясно, к кому обратиться. На любом этапе можно перейти сразу к поиску очного специалиста.</p></div><div class="route-grid">
+<article><span class="route-num">01</span><div class="route-dot"></div><h3>Сформулируйте вопрос</h3><p>Укажите вид, возраст питомца и наблюдаемые изменения.</p></article>
+<article><span class="route-num">02</span><div class="route-dot"></div><h3>Выберите направление</h3><p>Терапия, дерматология, кардиология и другие специальности — без случайного выбора.</p></article>
+<article><span class="route-num">03</span><div class="route-dot"></div><h3>Обратитесь очно</h3><p>После подключения клиник здесь появятся подтверждённые врачи, адреса и время приёма.</p></article>
+</div></div></section>
+<section class="specialists-section shell" id="specialists" aria-labelledby="specialists-heading">
+<div class="section-meta dark"><span>ОЧНАЯ ВЕТЕРИНАРИЯ</span><span>НАПРАВЛЕНИЯ / 08</span></div>
+<div class="specialists-title"><h2 id="specialists-heading">Найти врача<br><em>по&nbsp;задаче.</em></h2><p>Выберите специальность. Ниже показано, какие вопросы обычно рассматривает врач этого профиля. Конкретные клиники пока не подключены.</p></div>
+<div class="finder">
+<div class="specialty-index" role="group" aria-label="Выберите специальность">
+<button type="button" class="specialty-row is-active" data-id="therapist" data-name="Терапевт" data-description="Первичный осмотр, изменения аппетита и поведения, общая оценка состояния." aria-pressed="true"><span class="row-number">01</span><span class="row-main">Терапевт</span><span class="row-sub">Первичный осмотр</span><span class="row-arrow">↗</span></button>
+<button type="button" class="specialty-row" data-id="dermatologist" data-name="Дерматолог" data-description="Зуд, проблемы с кожей, шерстью, ушами, подозрения на аллергические реакции." aria-pressed="false"><span class="row-number">02</span><span class="row-main">Дерматолог</span><span class="row-sub">Кожа и шерсть</span><span class="row-arrow">↗</span></button>
+<button type="button" class="specialty-row" data-id="cardiologist" data-name="Кардиолог" data-description="Подозрения на заболевания сердца, обследование по направлению терапевта." aria-pressed="false"><span class="row-number">03</span><span class="row-main">Кардиолог</span><span class="row-sub">Сердце и сосуды</span><span class="row-arrow">↗</span></button>
+<button type="button" class="specialty-row" data-id="surgeon" data-name="Хирург" data-description="Хирургический осмотр, оценка необходимости вмешательства и послеоперационное наблюдение." aria-pressed="false"><span class="row-number">04</span><span class="row-main">Хирург</span><span class="row-sub">Хирургический осмотр</span><span class="row-arrow">↗</span></button>
+<button type="button" class="specialty-row" data-id="ophthalmologist" data-name="Офтальмолог" data-description="Изменения зрения, покраснение глаз, выделения и дискомфорт." aria-pressed="false"><span class="row-number">05</span><span class="row-main">Офтальмолог</span><span class="row-sub">Глаза и зрение</span><span class="row-arrow">↗</span></button>
+<button type="button" class="specialty-row" data-id="neurologist" data-name="Невролог" data-description="Нарушения координации, судорожные эпизоды, изменения движений и реакций." aria-pressed="false"><span class="row-number">06</span><span class="row-main">Невролог</span><span class="row-sub">Нервная система</span><span class="row-arrow">↗</span></button>
+<button type="button" class="specialty-row" data-id="dentist" data-name="Стоматолог" data-description="Зубы, дёсны, болезненность при кормлении и состояние полости рта." aria-pressed="false"><span class="row-number">07</span><span class="row-main">Стоматолог</span><span class="row-sub">Зубы и дёсны</span><span class="row-arrow">↗</span></button>
+<button type="button" class="specialty-row" data-id="exotics" data-name="Экзотолог" data-description="Ветеринарная помощь птицам, рептилиям, грызунам и другим необычным домашним животным." aria-pressed="false"><span class="row-number">08</span><span class="row-main">Экзотолог</span><span class="row-sub">Экзотические животные</span><span class="row-arrow">↗</span></button>
+</div>
+<aside class="selection-panel" aria-label="Подбор очной консультации"><div class="selection-top"><span>ВАШ ВЫБОР</span><svg class="mark" aria-hidden="true"><use href="#route-mark"></use></svg></div><div class="selection-content"><span class="selection-step">02 / СПЕЦИАЛЬНОСТЬ</span><h3 id="selected-name">Терапевт</h3><p id="selected-description">Первичный осмотр, изменения аппетита и поведения, общая оценка состояния.</p></div>
+<form class="finder-form" id="finder-form"><label for="pet-type">Кого будем показывать врачу?</label><select id="pet-type"><option value="dog">Собака</option><option value="cat">Кошка</option><option value="bird">Птица</option><option value="rodent">Грызун</option><option value="other">Другой питомец</option></select><label for="visit-city">Ваш город</label><input id="visit-city" type="text" maxlength="60" placeholder="Например, Казань" autocomplete="address-level2" required><button type="submit" class="button-dark" data-cta="primary">Проверить доступность <span aria-hidden="true">↗</span></button><div class="finder-feedback" id="finder-feedback" role="status" hidden><strong>Партнёрская база пока не подключена.</strong><p>Подтверждённые врачи и свободное время появятся после интеграции клиник. Заявка не отправлялась.</p></div><p class="selection-foot">Демо-режим: мы не собираем имена, телефоны и медицинские данные.</p></form></aside>
+</div></section>
+<section class="emergency-section" aria-labelledby="urgent-heading"><div class="shell urgent-grid"><div class="urgent-sign" aria-hidden="true"><span>!</span><small>СРОЧНО</small></div><div><div class="section-meta"><span>НЕ ЖДИТЕ ОТВЕТА ЧАТА</span><span>ВАЖНО</span></div><h2 id="urgent-heading">Некоторые ситуации<br>не терпят ожидания.</h2><p>Если питомец тяжело дышит, потерял сознание, у него судороги, сильное кровотечение или подозрение на отравление — сразу обращайтесь в ближайшую круглосуточную ветеринарную клинику. Чат и обычная запись для этого не подходят.</p></div></div></section>
+<section class="visit-section shell" aria-labelledby="visit-heading"><div class="section-meta dark"><span>ПЕРЕД ОЧНЫМ ПРИЁМОМ</span><span>ПАМЯТКА</span></div><div class="visit-grid"><div><h2 id="visit-heading">Что подготовить<br><em>до визита?</em></h2><p>Короткая памятка поможет точнее описать ситуацию специалисту. Не откладывайте срочный осмотр ради сбора информации.</p><svg class="visit-illustration" viewBox="0 0 400 200" fill="none" aria-hidden="true"><path d="M22 152h349M41 132C78 53 148 58 170 103c30 63 109 25 138-51" stroke="currentColor" stroke-width="1.5"/><path d="M66 78h112v120H66z" stroke="currentColor" stroke-width="1.5"/><path d="M94 91h56M94 111h56M94 131h37" stroke="currentColor" stroke-width="1.5"/><circle cx="308" cy="52" r="23" stroke="currentColor" stroke-width="1.5"/><path d="M299 52h18m-9-9v18" stroke="currentColor" stroke-width="1.5"/></svg></div><div class="visit-table"><div><span>01</span><h3>Наблюдения</h3><p>Когда появились симптомы, что изменилось, как часто они повторяются.</p></div><div><span>02</span><h3>История питомца</h3><p>Возраст, перенесённые заболевания, вакцинации и уже назначенные препараты.</p></div><div><span>03</span><h3>Материалы</h3><p>Результаты анализов, снимки и назначения, если они уже есть.</p></div></div></div></section>
+<section class="statement-section"><div class="shell statement-grid"><span class="side-index">О ПОДХОДЕ OPENPETS</span><h2>Не обещаем ответ<br>на&nbsp;каждый вопрос.<br><em>Помогаем выбрать<br>следующее действие.</em></h2><svg class="mark" aria-hidden="true"><use href="#route-mark"></use></svg></div></section>
+<section class="faq-section shell" id="answers" aria-labelledby="faq-heading"><div class="section-meta dark"><span>ВОПРОСЫ И ОТВЕТЫ</span><span>04 / СПРАВКА</span></div><div class="faq-grid"><h2 id="faq-heading">Перед тем<br>как начать.</h2><div class="faq-items"><details><summary>ИИ заменяет ветеринара?<span aria-hidden="true">+</span></summary><p>Нет. ИИ не проводит физический осмотр, не подтверждает диагноз и не заменяет специалиста. Сейчас чат представлен как интерфейс без подключённой модели.</p></details><details><summary>Можно прямо сейчас записаться к врачу?<span aria-hidden="true">+</span></summary><p>Пока нет. Сейчас можно выбрать специальность и город, но конкретные клиники и свободные слоты ещё не подключены. Мы не выдаём демонстрационный поиск за подтверждённую запись.</p></details><details><summary>Что делать при экстренных симптомах?<span aria-hidden="true">+</span></summary><p>Не ждите сообщения в чате: сразу связывайтесь с ближайшей круглосуточной ветеринарной клиникой и следуйте указаниям сотрудников.</p></details><details><summary>Сохраняются ли сообщения в демо?<span aria-hidden="true">+</span></summary><p>Эта демонстрация не отправляет текст чата на сервер и не создаёт историю в аккаунте. Не вводите чувствительные данные.</p></details></div></div></section>
+</main>
+<footer class="footer"><div class="shell footer-inner"><div class="footer-top"><span>OPENPETS / ПУТЬ К ПОМОЩИ</span><a href="#top">Наверх ↑</a></div><div class="footer-brand"><svg class="mark" aria-hidden="true"><use href="#route-mark"></use></svg><strong>openpets<span>.</span></strong></div><div class="footer-bottom"><p>Вопрос о питомце → профиль врача → очный приём.</p><nav aria-label="Нижняя навигация"><a href="#assistant">Чат</a><a href="#specialists">Специалисты</a><a href="#answers">Вопросы</a></nav><small>© OpenPets · Неофициальная демонстрация · 2026</small></div></div></footer>
+</body></html>
