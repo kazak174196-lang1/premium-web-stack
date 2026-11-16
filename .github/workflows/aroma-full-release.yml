@@ -1,0 +1,172 @@
+name: Aroma Residence full Timeweb release audit
+on:
+  push:
+    branches:
+      - aroma-residence-timeweb-20261116
+    paths:
+      - .github/workflows/aroma-full-release.yml
+permissions:
+  contents: write
+jobs:
+  assemble-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify both immutable source packages
+        run: |
+          set -euo pipefail
+          cd aroma-residence/releases
+          echo '3dbeeb457434571562198e3246050aa27d747073346a9e31e086b31ed44b2f0a  AromaResidence_Static_Backup_Timeweb_20261116.zip' | sha256sum -c -
+          echo '3ae5090af1b37a5ba2a45d8e430e7aa379a735c612deb74ebc367dc653854aa2  aroma-mini-core.zip' | sha256sum -c -
+          unzip -tq AromaResidence_Static_Backup_Timeweb_20261116.zip
+          unzip -tq aroma-mini-core.zip
+      - name: Assemble the complete release without touching production
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/aroma-source /tmp/aroma-adapter /tmp/aroma-export
+          unzip -q aroma-residence/releases/AromaResidence_Static_Backup_Timeweb_20261116.zip -d /tmp/aroma-source
+          unzip -q aroma-residence/releases/aroma-mini-core.zip -d /tmp/aroma-adapter
+          node /tmp/aroma-adapter/tools/assemble-timeweb.mjs --static /tmp/aroma-source/webroot --data /tmp/aroma-source/private --out /tmp/aroma-export/aroma-release
+          # A safe, fully disabled default makes public catalog and price quotes work.
+          # User must replace DB placeholders locally before enabling admin and ordering.
+          cp /tmp/aroma-export/aroma-release/.aroma_private/config.example.php /tmp/aroma-export/aroma-release/.aroma_private/config.php
+          cp /tmp/aroma-adapter/sql/0001_mysql.sql /tmp/aroma-export/aroma-release/MYSQL_SCHEMA_ALREADY_IMPORTED.sql
+          cat > /tmp/aroma-export/aroma-release/START_HERE.txt <<'TXT'
+          AROMA RESIDENCE — TIMEWEB OPTIMO, PRELAUNCH PACKAGE
+          DOMAIN: aromaresidence.ru
+          Storefront content is backed up from the exact public green Vercel release.
+          Prelaunch mode: new orders disabled, analytics opt-in, robots disallow all.
+          Your MySQL schema (7 tables) is already imported according to the screenshot.
+          IMPORTANT: ZIP contents go inside the 'Aroma' folder, NOT inside public_html.
+          Do not delete public_html/cgi-bin. Keep existing index.htm as a backup.
+          The archive contains two folders: public_html and .aroma_private.
+          After extraction, check Aroma/public_html/index.html exists, and
+          Aroma/.aroma_private/config.php exists. The private folder must be a sibling.
+          Do NOT publish or share DB passwords. Configure the MySQL DSN/user/password
+          and strong adminPasswordHash/sessionHmacSecret in private config.php.
+          Keep ordersEnabled, rknConfirmed, markingConfirmed, fiscalizationConfirmed
+          at FALSE while legal requirements are pending.
+          Existing Vercel production is unchanged.
+          After valid DNS and Let's Encrypt SSL, verify homepage, catalog, cart and
+          admin and complete final launch gates. Do not enable indexing yet.
+          TXT
+      - name: Check complete structure, content, privacy and asset integrity
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re,urllib.parse,hashlib
+          base=Path('/tmp/aroma-export/aroma-release')
+          web=base/'public_html'; private=base/'.aroma_private'
+          pages=list(web.rglob('index.html'))
+          webp=list(web.rglob('*.webp'))
+          c=json.loads((private/'catalog.json').read_text())
+          assert len(c['products']) == 91, ('catalog products',len(c['products']))
+          assert len(pages)>=96, ('pages',len(pages))
+          assert len(webp)>=94, ('webp',len(webp))
+          assert (web/'api/index.php').is_file()
+          assert (web/'admin/index.html').is_file()
+          assert (web/'privacy/index.html').is_file()
+          assert (web/'consent/index.html').is_file()
+          assert (web/'cookies/index.html').is_file()
+          assert (web/'sale/index.html').is_file()
+          assert (web/'returns/index.html').is_file()
+          assert (web/'seller/index.html').is_file()
+          assert (private/'config.php').is_file()
+          assert not (web/'config.php').exists()
+          assert 'ordersEnabled\' => false' in (private/'config.php').read_text()
+          assert 'Disallow: /' in (web/'robots.txt').read_text()
+          assert 'noindex' in (web/'admin/index.html').read_text().lower()
+          assert 'https://aroma-residence-emerald.vercel.app' not in (web/'sitemap.xml').read_text()
+          links=re.findall(r'<loc>([^<]+)</loc>',(web/'sitemap.xml').read_text())
+          errors=[]
+          for url in links:
+            parsed=urllib.parse.urlsplit(url)
+            assert parsed.netloc=='aromaresidence.ru',url
+            relative=parsed.path.lstrip('/')
+            f=web/relative/('index.html' if parsed.path.endswith('/') else '')
+            if not f.is_file(): errors.append(parsed.path)
+          assert not errors,errors
+          # All built HTML must reference present local static CSS and JS files.
+          assets_missing=set()
+          for file in pages:
+            text=file.read_text(errors='replace')
+            for attr,path in re.findall(r'(?:src|href)=["\'](/assets/[^"\']+)["\']',text):
+              if False:pass
+            for found in re.findall(r'(?:src|href)=["\'](/assets/[^"\']+)["\']',text):
+              pure=urllib.parse.urlsplit(found).path
+              if not (web/pure.lstrip('/')).is_file():assets_missing.add(pure)
+          assert not assets_missing, sorted(assets_missing)[:20]
+          report={'result':'PASS','products':len(c['products']),'indexPages':len(pages),'webpImages':len(webp),
+                  'sitemapLinks':len(links),'assetErrors':0,'mode':'prelaunch','ordersEnabled':False,
+                  'limitations':['Timeweb live MySQL connection not tested','SSL/DNS pending',
+                  'Playwright screenshots/mobile performance not yet run',
+                  'Roskomnadzor notice and trading compliance are not confirmed',
+                  'Admin end-to-end not yet run against real MySQL']}
+          (base/'AUTOMATED_AUDIT.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - name: PHP/JS syntax, storefront API smoke test (no customer data)
+        run: |
+          set -euo pipefail
+          find /tmp/aroma-export/aroma-release -name '*.php' -type f -print0 | xargs -0 -n1 php -l
+          find /tmp/aroma-export/aroma-release/public_html/assets -name '*.js' -type f -print0 | xargs -0 -n1 node --check
+          cat > /tmp/aroma-export/router.php <<'PHP'
+          <?php
+          $uri=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
+          if(preg_match('#^/api/(?:checkout-status|catalog|orders|quote|promo-status|admin)/?$#',$uri)){require __DIR__.'/aroma-release/public_html/api/index.php';return;}
+          return false;
+          PHP
+          cd /tmp/aroma-export
+          php -S 127.0.0.1:8989 -t aroma-release/public_html router.php >/tmp/aroma-php.log 2>&1 &
+          PID=$!
+          trap 'kill $PID 2>/dev/null || true' EXIT
+          for i in 1 2 3 4 5; do curl -fsS http://127.0.0.1:8989/api/checkout-status/ >/tmp/aroma-ready.json && break || sleep 1; done
+          python3 - <<'PY'
+          import json,urllib.request,urllib.error
+          host='http://127.0.0.1:8989'
+          def get(path):
+            with urllib.request.urlopen(host+path,timeout=5) as f:return f.status,json.load(f)
+          def post(path,payload):
+            req=urllib.request.Request(host+path,json.dumps(payload).encode(),{'Content-Type':'application/json'},method='POST')
+            try:
+              with urllib.request.urlopen(req,timeout=5) as f:return f.status,json.load(f)
+            except urllib.error.HTTPError as e:return e.code,json.load(e)
+          assert get('/api/checkout-status/')[1]['emailOrdersAvailable'] is False
+          assert get('/api/promo-status/')[1]['available'] is False
+          status,cat=get('/api/catalog/')
+          assert status==200 and len(cat['products'])==91
+          item=cat['products'][0]
+          size,amount=next((size,price) for size,price in item['prices'].items() if price>0)
+          code,quote=post('/api/quote/',{'items':[{'id':item['id'],'ml':str(size),'qty':1}]})
+          assert code==200,(code,quote)
+          assert quote['total']==int(amount),(quote,amount)
+          code,err=post('/api/orders/',{})
+          assert code==503,(code,err)
+          print('API smoke: catalogue 91, correct quote, orders disabled, promo disabled, checkout disabled')
+          PY
+      - name: Archive the entire installable content and audit report
+        run: |
+          set -euo pipefail
+          cd /tmp/aroma-export/aroma-release
+          zip -qr /tmp/aroma-export/AromaResidence_Timeweb_Complete_Prelaunch_2026-11-17.zip .
+          unzip -tq /tmp/aroma-export/AromaResidence_Timeweb_Complete_Prelaunch_2026-11-17.zip
+          sha256sum /tmp/aroma-export/AromaResidence_Timeweb_Complete_Prelaunch_2026-11-17.zip
+          ls -lh /tmp/aroma-export/AromaResidence_Timeweb_Complete_Prelaunch_2026-11-17.zip
+      - name: Publish verified release ZIP to isolated GitHub branch
+        run: |
+          set -euo pipefail
+          cp /tmp/aroma-export/AromaResidence_Timeweb_Complete_Prelaunch_2026-11-17.zip aroma-residence/releases/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aroma-residence/releases/AromaResidence_Timeweb_Complete_Prelaunch_2026-11-17.zip
+          if ! git diff --cached --quiet; then
+            git commit -m "build(aroma): add audited full Timeweb prelaunch installation ZIP"
+            git push origin HEAD:aroma-residence-timeweb-20261116
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aroma-residence-timeweb-prelaunch
+          path: /tmp/aroma-export/AromaResidence_Timeweb_Complete_Prelaunch_2026-11-17.zip
+          retention-days: 14
