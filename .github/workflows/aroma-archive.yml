@@ -1,0 +1,38 @@
+name: Aroma Residence safe archive recovery
+on:
+  push:
+    branches:
+      - aroma-residence-timeweb-20261116
+    paths:
+      - .github/workflows/aroma-archive.yml
+permissions:
+  contents: write
+jobs:
+  import-public-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download verified public Vercel snapshot
+        env:
+          SOURCE_URL: https://sb-41zhd8ay9ylv.vercel.run/AromaResidence_Static_Backup_Timeweb_20261116.zip
+          EXPECTED_SHA256: 3dbeeb457434571562198e3246050aa27d747073346a9e31e086b31ed44b2f0a
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 5 --retry-delay 2 --max-time 120 --output /tmp/aroma-site.zip "$SOURCE_URL"
+          echo "$EXPECTED_SHA256  /tmp/aroma-site.zip" | sha256sum --check --
+          mkdir -p aroma-residence/releases
+          cp /tmp/aroma-site.zip aroma-residence/releases/AromaResidence_Static_Backup_Timeweb_20261116.zip
+          unzip -tq aroma-residence/releases/AromaResidence_Static_Backup_Timeweb_20261116.zip
+      - name: Commit public-only, authenticated snapshot to isolated branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aroma-residence/releases/AromaResidence_Static_Backup_Timeweb_20261116.zip
+          if ! git diff --cached --quiet; then
+            git commit -m "build(aroma): preserve verified public storefront snapshot (static only)"
+            git push origin HEAD:aroma-residence-timeweb-20261116
+          fi
