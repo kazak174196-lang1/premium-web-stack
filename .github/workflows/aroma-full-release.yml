@@ -27,6 +27,8 @@ jobs:
           mkdir -p /tmp/aroma-source /tmp/aroma-adapter /tmp/aroma-export
           unzip -q aroma-residence/releases/AromaResidence_Static_Backup_Timeweb_20261116.zip -d /tmp/aroma-source
           unzip -q aroma-residence/releases/aroma-mini-core.zip -d /tmp/aroma-adapter
+          printf '%s\\n' '# Aroma Residence — installing on Timeweb Optimo' 'Unpack ZIP contents into the Aroma directory (not public_html).' 'Keep .aroma_private as a sibling of public_html.' 'Edit the private config locally; all live order gates remain false.' 'Keep the prelaunch robots.txt blocked until legal and operational approvals.' > /tmp/aroma-adapter/INSTALL.md
+          printf '%s\\n' '# Domain setup' 'Target: https://aromaresidence.ru/' 'Wait until domain registration and DNS are confirmed; then issue free Lets Encrypt certificate.' 'Production indexing and checkout must remain disabled until all release gates pass.' > /tmp/aroma-adapter/DOMAIN_SETUP.md
           node /tmp/aroma-adapter/tools/assemble-timeweb.mjs --static /tmp/aroma-source/webroot --data /tmp/aroma-source/private --out /tmp/aroma-export/aroma-release
           # A safe, fully disabled default makes public catalog and price quotes work.
           # User must replace DB placeholders locally before enabling admin and ordering.
