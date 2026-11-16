@@ -92,8 +92,6 @@ jobs:
           assets_missing=set()
           for file in pages:
             text=file.read_text(errors='replace')
-            for attr,path in re.findall(r'(?:src|href)=["\'](/assets/[^"\']+)["\']',text):
-              if False:pass
             for found in re.findall(r'(?:src|href)=["\'](/assets/[^"\']+)["\']',text):
               pure=urllib.parse.urlsplit(found).path
               if not (web/pure.lstrip('/')).is_file():assets_missing.add(pure)
