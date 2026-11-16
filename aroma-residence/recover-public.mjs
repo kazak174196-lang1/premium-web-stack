@@ -35,14 +35,14 @@ async function download(path){
   files.push({path,bytes:data.length,sha256:createHash('sha256').update(data).digest('hex')});
   if(isText||type.startsWith('text/')||path.endsWith('.js')){
    const content=data.toString('utf8');
-   for(const match of content.matchAll(/(?:src|href|poster|content)=["'](\\/assets\\/[^"'<>\\s]+)["']/g))add(match[1]);
-   for(const match of content.matchAll(/url\\(["']?(\\/assets\\/[^\\s)'"]+)/g))add(match[1]);
-   for(const match of content.matchAll(/["'](\\/(?:assets|media)\\/[a-zA-Z0-9_./?&=-]+)["']/g))add(match[1]);
+   for(const match of content.matchAll(/(?:src|href|poster|content)=["'](\/assets\/[^"'<>\s]+)["']/g))add(match[1]);
+   for(const match of content.matchAll(/url\(["']?(\/assets\/[^\s)'"]+)/g))add(match[1]);
+   for(const match of content.matchAll(/["'](\/(?:assets|media)\/[a-zA-Z0-9_./?&=-]+)["']/g))add(match[1]);
   }
  }catch(e){errors.push({path,error:String(e?.message||e)});}
 }
 const sitemap=(await get('/sitemap.xml')).bytes.toString('utf8');
-for(const match of sitemap.matchAll(/<loc>([^<]+)<\\/loc>/g)){
+for(const match of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)){
  const u=new URL(match[1]);
  if(u.origin===source)add(u.pathname);
 }
@@ -59,7 +59,7 @@ await mkdir(privateDir,{recursive:true});
 await writeFile(join(privateDir,'catalog.json'),JSON.stringify({products:catalog.products,sets:catalog.sets||[]},null,2));
 for(const item of catalog.products)if(typeof item.image==='string')add(item.image);
 while(offset<queue.length){const batch=queue.slice(offset,offset+8);offset+=batch.length;await Promise.all(batch.map(download));}
-await writeFile(join(web,'robots.txt'),'User-agent: *\\nDisallow: /\\n# prelaunch only\\n');
+await writeFile(join(web,'robots.txt'),'User-agent: *\nDisallow: /\n# prelaunch only\n');
 await writeFile(join(root,'snapshot-manifest.json'),JSON.stringify({source,target,products:catalog.products.length,files,errors},null,2));
 console.log('Recovered:',files.length,'resources,',catalog.products.length,'products;',errors.length,'errors');
 if(errors.length)process.exitCode=1;
