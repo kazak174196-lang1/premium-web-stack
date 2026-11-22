@@ -3,7 +3,7 @@
 Interactive concept for a multi-role veterinary telehealth platform. **Demo only; not a live clinical service.**
 
 ## Preview
-Deployment: https://openpets-vet-2027-concept-qssprd9od-kazakh1.vercel.app/
+Deployment: https://openpets-vet-2027-concept-msw5jt77e-kazakh1.vercel.app/
 
 ## Current coverage
 - Accessible responsive homepage, navigation, and service routes
@@ -20,6 +20,9 @@ Deployment: https://openpets-vet-2027-concept-qssprd9od-kazakh1.vercel.app/
 python3 -m http.server 8080 --directory openpets-2027
 ```
 Open `http://localhost:8080`. Camera access requires HTTPS or localhost and browser permission. If the browser cannot grant camera access, the status message explains the error.
+
+## Verification
+See [QA.md](./QA.md). The deployment is READY, but the preview is protected by Vercel Authentication and independent browser verification is still pending.
 
 ## Status and security
 The static prototype has no authentication, database, payment collection, AI model, or WebRTC backend. It is intentionally `noindex,nofollow`. Do not publicly enable bookings, sensitive uploads, consultations, or payments until server-side enforcement and acceptance tests are complete.
